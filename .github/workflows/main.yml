@@ -6,6 +6,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Get AWS Creds
+      - uses: CloudAdmin/awslogin-action@v1
+        id: awslogin
+        with:
+          service_account_username: ${{ secrets.SVC_ACCT_USERNAME }}
+          service_account_password: ${{ secrets.SVC_ACCT_PASSWORD }}
+          aws_account_id: ${{ secrets.SVC_ACCT_ID }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ steps.awslogin.outputs.awsAccessKeyId }}
+          aws-secret-access-key: ${{ steps.awslogin.outputs.awsSecretAccessKey }}
+          aws-session-token: ${{ steps.awslogin.outputs.awsSessionToken }}
+          aws-region: 'us-east-1'
       - uses: ./action-a
         with:
-          MY_NAME: "Mona"
+          MY_NAME: "Nate"
